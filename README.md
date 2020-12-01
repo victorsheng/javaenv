@@ -1,5 +1,6 @@
 # javaenv
 受rbenv和tfenv启发的Java版本管理器。 javaenv管理您已安装的Java版本，并允许将项目的Java版本保持在版本控制之下。
+该脚本采用python3编写的，轻松安装
 
 ## 为什么不使用jEnv？
 jEnv是具有相似目标的出色工具。但是，我希望javaenv管理Java环境的整个生命周期，包括安装，以简化某些工作流程。
