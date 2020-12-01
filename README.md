@@ -1,133 +1,80 @@
 # javaenv
+受rbenv和tfenv启发的Java版本管理器。 javaenv管理您已安装的Java版本，并允许将项目的Java版本保持在版本控制之下。
 
-A Java version manager heavily inspired by
-[rbenv](https://github.com/rbenv/rbenv) and
-[tfenv](https://github.com/tfutils/tfenv). `javaenv` manages your installed
-Java versions and allows for keeping the Java version for a project under
-version control.
+## 为什么不使用jEnv？
+jEnv是具有相似目标的出色工具。但是，我希望javaenv管理Java环境的整个生命周期，包括安装，以简化某些工作流程。
 
-## Why not jEnv?
+## 支持
+javaenv支持Linux和Mac OSX。对Windows的支持应该可行，但不在我的计划之列。
 
-[jEnv](https://github.com/jenv/jenv) is a great tool with similar goals.
-However, I wanted javaenv to manage the full life cycle of the Java
-environment, including installation, in order to simplify some workflows.
+# 安装
+## 使用git
+git clone https://github.com/protocol7/javaenv.git〜/ .javaenv
+javaenv是一个自包含脚本，需要Python 3.3或更高版本才能运行。
 
-## Support
+为了方便起见，将javaenv添加到$ PATH中，例如使用：
 
-javaenv supports Linux and Mac OS X. Support for Windows should be doable but
-is not on my roadmap.
+ln -s〜/ .javaenv / javaenv / usr / local / bin
+填充Java命令行工具：
 
-## Installation
-
-### Using git
-
-```
-git clone https://github.com/protocol7/javaenv.git ~/.javaenv
-```
-
-`javaenv` is a self-contained script and requires Python 3.3 or newer to run.
-
-For convenience, add `javaenv` to your $PATH, e.g. using:
-
-```
-ln -s ~/.javaenv/javaenv /usr/local/bin
-```
-
-Shim the Java command line tools:
-
-```
-ln -s ~/.javaenv/javaenv /usr/local/bin/java
-ln -s ~/.javaenv/javaenv /usr/local/bin/javac
+ln -s〜/ .javaenv / javaenv / usr / local / bin / java
+ln -s〜/ .javaenv / javaenv / usr / local / bin / javac
 ...
-```
+这将允许您自动切换Java，javac和其他工具的版本，例如：
 
-This will allow you to automatically switch version for `java`, `javac` and
-other tools, for example:
-
-```
 $ cd my-java-project
 $ cat .javaversion
 openjdk-11.0.2
-$ javac -version
+$ javac-版本
 javac 11.0.2
-```
+# 用法
+## versions
+作为命令行参数或.javaversion文件提供的版本的格式为<distribution>-<version>。支持的发行版是：
 
-## Usage
+采用openjdk
+Corretto
+OpenJDK
+甲骨文
+有效版本为，例如，openjdk-11.0.2。
 
-### Versions
+该版本可以用于某些命令，而对于.javaversion文件，该发行版不包括发行版，在这种情况下，openjdk被用作默认版本。因此，有效版本也可以是例如11.0.2。
 
-Versions, as provided as command line arguments or in `.javaversion` files are
-in the format of `<distribution>-<version>`. Supported distributions are:
+## .javaversion
+如果没有为命令提供版本，或者在调用Java命令行实用程序时，将从当前目录中名为.javaversion的文件中读取该版本。该文件应仅包含上面定义的版本，例如：
 
-* `adoptopenjdk`
-* `corretto`
-* `openjdk`
-* `oracle`
+回声'openjdk-11.0.2'> .javaversion
+建议将.javaversion保留在源代码的版本控制下。这使贡献者可以轻松地安装和使用正确的Java版本。
 
-A valid version would be, for example, `openjdk-11.0.2`.
+## jjavaenv install [version]
+安装JDK的版本。要安装的版本可以提供给命令，也可以从.javaversion文件中读取。如果已经安装了该版本，则为空操作。因此，当使用javaenv在项目上开始工作时，您只需运行即可进行全部设置：
 
-The version can for some commands and for `.javaversion` files exclude the
-distribution, in which case `openjdk` is used as the default. Thus, a valid
-version can also be, for example, `11.0.2`.
+javaenv安装
+## javaenv uninstall version
+卸载特定版本。版本必须包含发行版名称。
 
-### .javaversion
+## javaenv list
+列出本地安装的版本
 
-If a version is not provided for a command, or when calling Java command line
-utilities, the version will be read from a file called `.javaversion` in the
-current directory. This file should contain only the version, as defined above,
-for example:
+## javaenv list-remote
+列出所有可用于安装的版本。
 
-```
-echo 'openjdk-11.0.2' > .javaversion
-```
+## javaenv home [version]
+打印活动版本的JAVA_HOME的值。该版本可以提供给命令，也可以从.javaversion文件中读取。该命令对于使用JAVA_HOME的工具很有用，例如Maven。
 
-It is recommended that `.javaversion` is kept under version control with your
-source code. This allows contributors to easily install and use the correct
-Java version.
-
-### javaenv install [version]
-
-Installs a version of the JDK. The version to install can either be provided to
-the command, or read from a `.javaversion` file. if the version is already
-installed, this is a no-op. Thus, when starting work on a project using javaenv
-you can simply run to be all set up:
-
-```
-javaenv install
-```
-
-### javaenv uninstall version
-
-Uninstall a specific version. The version must include the distribution name.
-
-### javaenv list
-
-List locally installed versions
-
-### javaenv list-remote
-
-List all versions available for installation.
-
-### javaenv home [version]
-
-Print the value for `JAVA_HOME` for the active version. The version can either
-be provided to the command, or read from a `.javaversion file`. The command is
-useful for tools using `JAVA_HOME`, e.g. Maven.
-
-```
 export JAVA_HOME=$(javaenv home)
-```
 
-## Verification of installations
+# 验证安装
+下载安装文件时，javaenv将验证预期的SHA256 / MD6哈希。请注意，预期的哈希存储在javaenv命令本身中，因此这需要您信任javaenv安装。
 
-When downloading installation files, javaenv will verify the expected SHA256/MD6
-hash.  Note that the expected hash is stored in the `javaenv` command itself,
-so this requires you to trust your javaenv installation.
+# TODO
+添加对自动调整Java命令行工具的支持
+添加所有已发布且仍可用的版本
+添加对构建Docker映像的支持
+添加对构建Docker映像的支持原文
+添加对构建Docker映像的支持
+添加直接支持以设置Maven的Java版本
+[长期]不再需要Python
 
-## TODO
 
-* Add support for automatically shimming Java command line tools
-* Add all released and still available versions
-* Add support for building Docker images
-* Add direct support for setting Java version for Maven
-* [Long term] Remove need for Python
+# 翻译原文
+https://github.com/protocol7/javaenv
